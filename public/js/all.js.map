@@ -1,0 +1,1 @@
+{"version":3,"sources":["all.js","all2.js"],"names":["str","console","log","omg"],"mappings":";;AAAA,IAAIA,GAAG,GAAG,aAAV;AACAC,OAAO,CAACC,GAAR,CAAYF,GAAZ;;;ACDA,IAAIG,GAAG,GAAG,cAAV;AACAF,OAAO,CAACC,GAAR,CAAYC,GAAZ","file":"all.js","sourcesContent":["let str = 'Hello World';\nconsole.log(str);\n","let omg = 'Hello Taiwan';\nconsole.log(omg);\n"]}
