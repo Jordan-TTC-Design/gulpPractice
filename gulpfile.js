@@ -4,10 +4,16 @@ const sass = require('gulp-sass');
 const plumber = require('gulp-plumber');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
+const autoprefixer = require('autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
+const gpostcss = require('gulp-postcss');
+const postcss = require('postcss');
 const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const browserSync = require('browser-sync').create();
+const mainBowerFiles = require('main-bower-files');
+const ghPages = require('gulp-gh-pages');
+ 
 
 gulp.task('copyHTML', function () {
   return gulp
@@ -17,18 +23,28 @@ gulp.task('copyHTML', function () {
 });
 
 gulp.task('sass', function () {
-  return (
-    gulp
-      .src('./source/scss/**/*.scss')
-      .pipe(plumber())
-      .pipe(sourcemaps.init())
-      .pipe(sass().on('error', sass.logError))
-      .pipe(concat('all.css'))
-      // .pipe(cleanCSS())
-      .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('./public/css'))
-      .pipe(browserSync.stream())
-  );
+  return gulp
+    .src('./source/scss/**/*.scss')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(concat('all.css'))
+    .pipe(gpostcss([autoprefixer()]))
+    .pipe(cleanCSS())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./public/css'))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('bower', function () {
+  return gulp.src(mainBowerFiles()).pipe(gulp.dest('./.tmp/vendors'));
+});
+
+gulp.task('vendorJs', gulp.series('bower'), function () {
+  return gulp
+    .src('./.tmp/vendors/**/**.js')
+    .pipe(concat('vendors.js'))
+    .pipe(gulp.dest('./public/js'));
 });
 
 gulp.task('babel', () =>
@@ -64,6 +80,12 @@ gulp.task('watch', function () {
   gulp.watch('./source/scss/**/*.js', gulp.series('babel'));
   gulp.watch('./source/**/*.html', gulp.series('copyHTML'));
 });
+gulp.task('deploy', function() {
+  return gulp.src('./public/**/*')
+    .pipe(ghPages());
+});
+
+
 
 gulp.task(
   'default',
@@ -71,6 +93,7 @@ gulp.task(
     'sass',
     'copyHTML',
     'babel',
+    'vendorJs',
     gulp.parallel('browser-sync', 'watch')
   )
 );

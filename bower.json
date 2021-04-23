@@ -1,0 +1,22 @@
+{
+  "name": "sudo bower init",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "JordanTseng <jordan.ttc.design@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "bootstrap": "^4.6.0",
+    "vue": "^2.6.12"
+  }
+}
